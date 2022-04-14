@@ -14,15 +14,20 @@ services:
     networks: 
       - internal
 
-  # db:
-  #   image: mongo:5.0
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ./.docker/mongodb/dbdata:/data/db
-  #   ports:
-  #     - "27016:27017"
-  #   networks: 
-  #     - internal
+  mysql:
+    image: mysql:5.7.22
+    restart: unless-stopped
+    environment: 
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=myapp
+      - MYSQL_PASSWORD=myapp
+      - MYSQL_DATABASE=myapp_docker
+    volumes: 
+        - ./.docker/mysql/dbdata:/var/lib/mysql
+    ports: 
+        - "3388:3306"
+    networks: 
+        - internal
 
 networks: 
     internal:
