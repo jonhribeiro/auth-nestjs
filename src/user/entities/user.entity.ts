@@ -1,6 +1,27 @@
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { v4 as uuid } from "uuid";
+
+@Entity('users')
 export class User {
-  id?: number;
+  @PrimaryGeneratedColumn()
+  id: number
+
+  @Column({type: 'varchar', length: 100})
   email: string;
+
+  @Column({type: 'varchar', length: 100})
   password: string;
+
+  @Column({type: 'varchar', length: 100})
   name: string;
+
+  @CreateDateColumn({type: 'timestamp'})
+  created_at: Date
+
+  // constructor() {
+  //   if(!this.id) {
+  //       this.id = uuid()
+  //   }
+  // }
+
 }
