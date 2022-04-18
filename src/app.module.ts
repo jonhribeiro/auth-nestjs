@@ -7,7 +7,6 @@ import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
-    UserModule, AuthModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'database',
@@ -19,6 +18,7 @@ import { UserModule } from './user/user.module';
       autoLoadEntities: true,
       synchronize: true,
     }),
+    UserModule, AuthModule,
   ],
   controllers: [],
   providers: [
