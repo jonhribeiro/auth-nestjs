@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
@@ -7,14 +7,14 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectRepository(User) private readonly prisma: Repository<User>) {} 
+  constructor(@InjectRepository(User) private readonly usuario: Repository<User>) {} 
 
   async create(createUserDto: CreateUserDto): Promise<User> {  
     const data = {
       ...createUserDto,
       password: await bcrypt.hash(createUserDto.password, 10),
     };
-    const createdUser = await this.prisma.save( data ); 
+    const createdUser = await this.usuario.save( data ); 
     
     return {
       ...createdUser,
@@ -22,7 +22,19 @@ export class UserService {
     };
   }
 
+  async show(id: number): Promise<User> {
+    const user = await this.usuario.findOne(id)
+    
+    if (!user) {
+      throw new NotFoundException(`Usuario com id ${id} não encontrado`)
+    }
+    return {
+      ...user,
+      password: undefined,
+    };
+  }
+
   findByEmail(email: string) {
-    return this.prisma.findOne({email}); 
+    return this.usuario.findOne({email}); 
   }
 }
