@@ -1,8 +1,10 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
+import { ValidacaoParametrosPipe } from '../common/pipes/validacao-parametros.pipe';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('user')
 export class UserController {
@@ -15,7 +17,17 @@ export class UserController {
   }
 
   @Get('/:id')
-  async show(@Param('id') id: number): Promise<User> {
+  async show(@Param('id', ValidacaoParametrosPipe) id: number): Promise<User> {
     return await this.userService.show(id)
+  }
+
+  @Get()
+  async index(): Promise<User[]> {
+    return await this.userService.index()
+  }
+
+  @Put('/:id')
+  async update(@Body() updateUserDto: UpdateUserDto, @Param('id', ValidacaoParametrosPipe) id: number): Promise<User> {
+    return await this.userService.update(id, updateUserDto)
   }
 }
