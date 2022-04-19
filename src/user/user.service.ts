@@ -10,7 +10,7 @@ import { User } from './entities/user.entity';
 export class UserService {
   constructor(@InjectRepository(User) private readonly usuario: Repository<User>) {} 
 
-  async create(createUserDto: CreateUserDto): Promise<User> {  
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const { email } = createUserDto
     const userEncontrado = await this.usuario.findOne({email})
 
@@ -21,7 +21,8 @@ export class UserService {
     const data = {
       ...createUserDto,
       password: await bcrypt.hash(createUserDto.password, 10),
-    };
+    }
+
     const createdUser = await this.usuario.save( data ); 
     
     return {

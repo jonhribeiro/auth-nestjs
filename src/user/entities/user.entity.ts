@@ -1,10 +1,11 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
   id: number
 
+  @Index({ unique: true })
   @Column({type: 'varchar', length: 100})
   email: string;
 

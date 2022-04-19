@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { UserModule } from './user/user.module'; 
+import { CategoriaModule } from './categoria/categoria.module';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { UserModule } from './user/user.module';
       autoLoadEntities: true,
       synchronize: true,
     }),
-    UserModule, AuthModule,
+    UserModule, AuthModule, CategoriaModule,
   ],
   controllers: [],
   providers: [
