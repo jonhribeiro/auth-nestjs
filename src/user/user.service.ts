@@ -50,13 +50,17 @@ export class UserService {
     return await this.usuario.find()
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+  async updates(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const userEncontrado = await this.usuario.findOne(id)
     
     if (!userEncontrado) {
       throw new NotFoundException(`Usuario com id ${id} não encontrado`)
     }
-    // return await this.usuario.
+    const editOne = Object.assign(userEncontrado, updateUserDto)
+    return await this.usuario.save(editOne)
+  }
 
+  async destroy(id: number): Promise<any> {
+    return await this.usuario.delete(id)
   }
 }

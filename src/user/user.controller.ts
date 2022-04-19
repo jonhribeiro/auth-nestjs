@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
@@ -28,6 +28,11 @@ export class UserController {
 
   @Put('/:id')
   async update(@Body() updateUserDto: UpdateUserDto, @Param('id', ValidacaoParametrosPipe) id: number): Promise<User> {
-    return await this.userService.update(id, updateUserDto)
+    return await this.userService.updates(id, updateUserDto)
+  }
+
+  @Delete('/:id')
+  async destroy(@Param('id', ValidacaoParametrosPipe) id: number): Promise<void> {
+    this.userService.destroy(id)
   }
 }
