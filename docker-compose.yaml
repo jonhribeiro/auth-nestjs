@@ -11,6 +11,8 @@ services:
     volumes:
       - .:/usr/app
       - /usr/app/node_modules
+    extra_hosts: 
+      - "host.docker.internal:host-gateway"
     networks: 
       - internal
 

@@ -1,47 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
-import { UnauthorizedError } from './errors/unauthorized.error';
-import { User } from '../user/entities/user.entity';
-import { UserService } from '../user/user.service';
-import { UserPayload } from './models/UserPayload';
-import { UserToken } from './models/UserToken';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly jwtService: JwtService,
-    private readonly userService: UserService,
-  ) {}
+  constructor(private http: HttpService) {}
 
-  async login(user: User): Promise<UserToken> {
-    const payload: UserPayload = {
-      sub: user.id,
-      email: user.email,
-      name: user.name,
-    };
-
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
-  }
-
-  async validateUser(email: string, password: string): Promise<User> {
-    const user = await this.userService.findByEmail(email)
-    
-    if (user) {
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-
-      if (isPasswordValid) {
-        return {
-          ...user,
-          password: undefined,
-        };
-      }
-    }
-
-    throw new UnauthorizedError(
-      'Email ou password incorreto.',
+  async login(username: string, password: string) {
+    const { data } = await firstValueFrom(
+      this.http.post(
+        'http://host.docker.internal:8080/auth/realms/fullcycle/protocol/openid-connect/token',
+        new URLSearchParams({
+          client_id: 'nest',
+          client_secret: 'cc48f4c5-99f5-48d8-9cbc-023d92869d6b',
+          grant_type: 'password',
+          username,
+          password,
+        }),
+      ),
     );
+    return data;
   }
 }
